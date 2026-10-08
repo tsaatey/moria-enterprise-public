@@ -22,6 +22,11 @@ const imageHosts = [
 const nextConfig: NextConfig = {
   devIndicators: false,
   images: {
+    // The optimizer allows an original 7 s to download, which is not
+    // configurable; on a slow link every cover then fails. Setting this lets
+    // the browser load covers straight from Spaces instead. Leave it unset
+    // when deployed, where the optimizer sits near Spaces and caches.
+    unoptimized: process.env.MORIA_IMAGES_UNOPTIMIZED === "true",
     remotePatterns: imageHosts.map((hostname) => ({
       protocol: "https",
       hostname,
