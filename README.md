@@ -21,13 +21,14 @@ It is a Next.js 16 app that reads the API's unauthenticated `/api/v1/public/*` r
 
 ## Configuration
 
-| Variable            | Purpose                                                                                                         |
-| ------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `PORT`              | Port to serve on (default `5174`)                                                                               |
-| `MORIA_API_URL`     | The API base, e.g. `https://api.example.com/api/v1`. Read on the server only                                    |
-| `SITE_URL`          | This site's public address — canonical links, sitemap, social previews. Needed at build time                    |
-| `MORIA_IMAGE_HOSTS` | Extra hosts covers may load from (a custom CDN domain). `*.digitaloceanspaces.com` is built in                  |
-| `REVALIDATE_SECRET` | Secret the API sends to `/api/revalidate`. Equals the API's `PUBLIC_SITE_REVALIDATE_SECRET`. Blank turns it off |
+| Variable                   | Purpose                                                                                                                                |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `PORT`                     | Port to serve on (default `5174`)                                                                                                      |
+| `MORIA_API_URL`            | The API base, e.g. `https://api.example.com/api/v1`. Read on the server only                                                           |
+| `SITE_URL`                 | This site's public address — canonical links, sitemap, social previews. Needed at build time                                           |
+| `MORIA_IMAGE_HOSTS`        | Extra hosts covers may load from (a custom CDN domain). `*.digitaloceanspaces.com` is built in                                         |
+| `REVALIDATE_SECRET`        | Secret the API sends to `/api/revalidate`. Equals the API's `PUBLIC_SITE_REVALIDATE_SECRET`. Blank turns it off                        |
+| `MORIA_IMAGES_UNOPTIMIZED` | `true` skips the image optimizer, which allows an original only 7 s to download. For slow local connections; leave unset when deployed |
 
 ## How it reads the API
 
