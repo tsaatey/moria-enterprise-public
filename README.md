@@ -21,12 +21,13 @@ It is a Next.js 16 app that reads the API's unauthenticated `/api/v1/public/*` r
 
 ## Configuration
 
-| Variable            | Purpose                                                                                        |
-| ------------------- | ---------------------------------------------------------------------------------------------- |
-| `PORT`              | Port to serve on (default `5174`)                                                              |
-| `MORIA_API_URL`     | The API base, e.g. `https://api.example.com/api/v1`. Read on the server only                   |
-| `SITE_URL`          | This site's public address — canonical links, sitemap, social previews. Needed at build time   |
-| `MORIA_IMAGE_HOSTS` | Extra hosts covers may load from (a custom CDN domain). `*.digitaloceanspaces.com` is built in |
+| Variable            | Purpose                                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `PORT`              | Port to serve on (default `5174`)                                                                               |
+| `MORIA_API_URL`     | The API base, e.g. `https://api.example.com/api/v1`. Read on the server only                                    |
+| `SITE_URL`          | This site's public address — canonical links, sitemap, social previews. Needed at build time                    |
+| `MORIA_IMAGE_HOSTS` | Extra hosts covers may load from (a custom CDN domain). `*.digitaloceanspaces.com` is built in                  |
+| `REVALIDATE_SECRET` | Secret the API sends to `/api/revalidate`. Equals the API's `PUBLIC_SITE_REVALIDATE_SECRET`. Blank turns it off |
 
 ## How it reads the API
 
@@ -35,13 +36,23 @@ Every catalogue request is made **on this app's server** and cached for 5 minute
 - the API needs **no CORS entry** for this site;
 - the API's per-IP rate limit on public routes sees this server as one client, and the cache is what keeps it under that limit. If traffic outgrows it, raise `PUBLIC_RATE_LIMIT` on the API for this server rather than calling the API from the browser.
 
+### Changes show at once
+
+The API calls `POST /api/revalidate` after every product or category create or update, with `Authorization: Bearer <REVALIDATE_SECRET>`. The site then drops its cached catalogue, and the next visitor gets fresh data. To turn it on, generate one secret and set it on both sides:
+
+- site: `REVALIDATE_SECRET`
+- API: `PUBLIC_SITE_REVALIDATE_SECRET`, plus `PUBLIC_SITE_REVALIDATE_URL=https://<this site>/api/revalidate`
+
+The call is best-effort: if it fails, the five-minute expiry still catches up.
+
 ## Pages
 
-| Route            | What it shows                                                               |
-| ---------------- | --------------------------------------------------------------------------- |
-| `/`              | The catalogue: `?q=` search, `?category=` filter, `?page=` (24 per page)    |
-| `/products/[id]` | One product. Hidden, deleted and unknown products are all a plain 404       |
-| `/sitemap.xml`   | The catalogue, each category and each product                               |
-| `/robots.txt`    | Allows everything; points at the sitemap. Search result pages are `noindex` |
+| Route             | What it shows                                                               |
+| ----------------- | --------------------------------------------------------------------------- |
+| `/`               | The catalogue: `?q=` search, `?category=` filter, `?page=` (24 per page)    |
+| `/products/[id]`  | One product. Hidden, deleted and unknown products are all a plain 404       |
+| `/sitemap.xml`    | The catalogue, each category and each product                               |
+| `/robots.txt`     | Allows everything; points at the sitemap. Search result pages are `noindex` |
+| `/api/revalidate` | `POST` only, from the API — clears the catalogue cache (see above)          |
 
 Prices are the catalogue `defaultPrice`, not any one shop's price, and the site says so.
