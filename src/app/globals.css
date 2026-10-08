@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/*
+ * Moria Regality — the brand theme from the backend repo's
+ * prototypes/shared/theme.js, with the same names the console uses so a class
+ * means the same thing in both apps.
+ */
+@theme {
+  --color-regal-plum: #2d0a31;
+  --color-monarch-gold: #d4af37;
+  --color-lavender-mist: #f3e8f5;
+  --color-silk-white: #fcf8ff;
+  --color-background: #fff7fa;
+  --color-surface: #fff7fa;
+  --color-on-surface: #1e1a1d;
+  --color-on-surface-variant: #4d444c;
+  --color-outline: #7f747c;
+  --color-outline-variant: #d0c3cc;
+  --color-plum-light: #79507a;
+  --color-orchid: #e9b6e7;
+
+  --font-display: var(--font-playfair), serif;
+  --font-sans: var(--font-hanken), sans-serif;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-on-surface);
+}
+
+.luxury-gradient {
+  background: radial-gradient(circle at top right, #3a1040 0%, #2d0a31 100%);
+}
