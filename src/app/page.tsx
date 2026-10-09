@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
+import { SearchBox } from "@/components/search-box";
 import { getCategories, getProducts, isId } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
@@ -79,29 +80,7 @@ export default async function CataloguePage({ searchParams }: PageProps<"/">) {
           what is in stock today.
         </p>
 
-        <form action="/" className="mt-6 flex max-w-xl gap-2" role="search">
-          {filters.category && (
-            <input type="hidden" name="category" value={filters.category} />
-          )}
-          <label htmlFor="q" className="sr-only">
-            Search the catalogue
-          </label>
-          <input
-            id="q"
-            name="q"
-            type="search"
-            defaultValue={filters.q}
-            maxLength={200}
-            placeholder="Search products…"
-            className="min-w-0 flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-silk-white placeholder:text-silk-white/60 focus:border-monarch-gold focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="rounded-lg bg-monarch-gold px-5 py-3 font-semibold text-regal-plum transition hover:bg-[#f2d472]"
-          >
-            Search
-          </button>
-        </form>
+        <SearchBox query={filters.q} category={filters.category} />
       </section>
 
       {categories.length > 0 && (
