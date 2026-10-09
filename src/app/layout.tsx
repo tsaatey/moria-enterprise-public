@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Hanken_Grotesk, Playfair_Display } from "next/font/google";
+import { SiteFooter } from "@/components/site-footer";
 import { siteUrl } from "@/lib/utils";
 import "./globals.css";
 
@@ -28,8 +29,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    // Browser extensions (script and tracker blockers) stamp attributes onto
+    // <html> before React hydrates, which React reports as a mismatch. This
+    // silences attribute mismatches on this one element only — anything
+    // inside the page is still checked.
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${hanken.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
@@ -60,20 +66,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
 
-        <footer className="border-t border-outline-variant bg-lavender-mist">
-          <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-on-surface-variant md:px-8">
-            <p className="font-display text-base text-regal-plum">
-              Moria Enterprise
-            </p>
-            <p className="mt-2">
-              Prices shown are catalogue prices. Availability and price may vary
-              by shop — please ask in store.
-            </p>
-            <p className="mt-4 text-xs text-outline">
-              © {new Date().getFullYear()} Moria Enterprise
-            </p>
-          </div>
-        </footer>
+        <SiteFooter />
       </body>
     </html>
   );
