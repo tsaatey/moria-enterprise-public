@@ -31,6 +31,12 @@ export type Product = {
   categoryName: string | null;
   /** The catalogue price, a 2-dp string. Not any one shop's price. */
   defaultPrice: string;
+  /**
+   * The catalogue's wholesale offer: `wholesalePrice` each when buying at
+   * least `wholesaleMinQuantity` of this item. Both null when there is none.
+   */
+  wholesalePrice: string | null;
+  wholesaleMinQuantity: number | null;
   coverImageUrl: string | null;
 };
 
@@ -73,6 +79,15 @@ async function get(url: URL) {
 async function failed(res: Response): Promise<never> {
   const body = await res.text().catch(() => "");
   throw new Error(`Catalogue request failed (${res.status}): ${body}`);
+}
+
+export type Shop = { name: string; location: string | null };
+
+/** Open shops, by name — where to buy. */
+export async function getShops(): Promise<Shop[]> {
+  const res = await get(apiUrl("/shops"));
+  if (!res.ok) return failed(res);
+  return res.json();
 }
 
 /** Active categories, by name. */
