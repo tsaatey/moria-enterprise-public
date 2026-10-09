@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { ProductCover } from "@/components/product-cover";
 import { getProduct } from "@/lib/catalog";
-import { formatGhs } from "@/lib/utils";
+import { formatGhs, wholesaleOffer } from "@/lib/utils";
 
 /** Shared by the metadata and the page, so one request serves both. */
 const loadProduct = cache(async (id: string) => {
@@ -19,7 +19,7 @@ export async function generateMetadata({
   const product = await loadProduct((await params).id);
   const description =
     product.description ??
-    `${product.name}${product.categoryName ? ` — ${product.categoryName}` : ""}, ${formatGhs(product.defaultPrice)}.`;
+    `${product.name}${product.categoryName ? ` — ${product.categoryName}` : ""}, ${formatGhs(product.defaultPrice)}${wholesaleOffer(product) ? `; wholesale ${wholesaleOffer(product)}` : ""}.`;
 
   return {
     title: product.name,
@@ -79,6 +79,20 @@ export default async function ProductPage({
           <p className="text-2xl font-semibold text-on-surface">
             {formatGhs(product.defaultPrice)}
           </p>
+          {product.wholesalePrice !== null &&
+            product.wholesaleMinQuantity !== null && (
+              <div className="flex flex-wrap items-baseline gap-x-2 rounded-lg bg-lavender-mist px-4 py-3">
+                <span className="text-xs font-semibold tracking-[0.2em] text-plum-light uppercase">
+                  Wholesale
+                </span>
+                <span className="font-semibold text-regal-plum">
+                  {formatGhs(product.wholesalePrice)} each
+                </span>
+                <span className="text-sm text-on-surface-variant">
+                  when you buy {product.wholesaleMinQuantity} or more
+                </span>
+              </div>
+            )}
 
           {product.description && (
             <p className="leading-relaxed whitespace-pre-line text-on-surface-variant">

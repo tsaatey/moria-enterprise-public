@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Product } from "@/lib/catalog";
-import { formatGhs } from "@/lib/utils";
+import { formatGhs, wholesaleOffer } from "@/lib/utils";
 import { ProductCover } from "./product-cover";
 
 export function ProductCard({
@@ -36,6 +36,11 @@ export function ProductCard({
         <p className="mt-auto pt-2 font-semibold text-on-surface">
           {formatGhs(product.defaultPrice)}
         </p>
+        {wholesaleOffer(product) && (
+          <p className="text-xs text-plum-light">
+            Wholesale: {wholesaleOffer(product)}
+          </p>
+        )}
       </div>
     </Link>
   );
